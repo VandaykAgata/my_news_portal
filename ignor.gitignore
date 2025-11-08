@@ -1,0 +1,14 @@
+# Виртуальное окружение
+.venv/
+venv/
+*.pyc
+
+# База данных
+db.sqlite3
+
+# Django/PyCharm
+__pycache__/
+.idea/
+
+# Логи
+*.log
