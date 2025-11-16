@@ -84,6 +84,12 @@ class Comment(models.Model):
         self.rating -=1
     def __str__(self):
         return f'{self.user.username}:{self.text[:50]}...'
+class Article(models.Model):
+    title=models.CharField(max_length=200)
+    content=models.TextField()
+    pub_date=models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return self.title
 
 
 

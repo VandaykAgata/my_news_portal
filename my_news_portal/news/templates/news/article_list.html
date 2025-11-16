@@ -1,0 +1,20 @@
+{% extends 'default.html' %}
+{% load censor %}
+
+{% block content %}
+    <h2>Все новости и статьи</h2>
+<p>Всего новостей : <strong>{{ articles|length }}</strong></p>
+
+    {% for article in articles %}
+        <div class="article-preview">
+
+            <h3>{{ article.title }}</h3>
+            <p>{{ article.content|truncatewords:20|censor }}</p>
+            <p>Дата публикации: <strong>{{ article.pub_date|date:"d.m.Y" }}</strong></p>
+
+            <p><a href="{% url 'article_detail' pk=article.pk %}">Читать полностью...</a></p>
+        </div>
+        <hr>
+    {% endfor %}
+
+{% endblock content %}

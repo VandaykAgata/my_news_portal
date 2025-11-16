@@ -1,18 +1,19 @@
-from django.shortcuts import render
-from .models import Post, Comment  # <-- Добавь импорт Comment
+#from django.shortcuts import render
+#from django.template.context_processors import request
+
+from .models import Article
+from django.views.generic import ListView,DetailView
 
 
-def PostList(request):
-    posts = Post.objects.all()
 
-    # --- ВРЕМЕННОЕ ПОЛУЧЕНИЕ КОММЕНТАРИЕВ ДЛЯ ПРИМЕРА ---
-    # Мы получим все комментарии, чтобы потом передать их в HTML
-    comments = Comment.objects.all()
-    # -----------------------------------------------------
 
-    context = {
-        'posts': posts,
+class ArticleListView(ListView):
+    model=Article
+    template_name = 'news/article_list.html'
+    context_object_name = 'articles'
+    ordering = ['-pub_date']
 
-    }
-
-    return render(request, 'news/post_list.html', context)
+class ArticleDetailView(DetailView):
+    model=Article
+    template_name = 'news/article_detail.html'
+    context_object_name = 'article'
