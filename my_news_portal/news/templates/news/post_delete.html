@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Вы уверены, что хотите удалить "</title>
+</head>
+<body>
+    <h1>Вы уверены, что хотите удалить "{{ post.title }}"?</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        <input type="submit" value="Подтвердить удаление">
+    </form>
+
+</body>
+</html>

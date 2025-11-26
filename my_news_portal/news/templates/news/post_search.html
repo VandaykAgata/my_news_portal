@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Поиск и фильтрация постов</title>
+</head>
+<body>
+    {% load url_filters %}  <h1>Поиск постов</h1>
+
+    <form action="" method="get">
+        {{ filterset.form.as_p }}
+        <input type="submit" value="Применить фильтр" />
+    </form>
+
+    <hr>
+
+    {% if posts %}
+        <h2>Найдено постов: {{ posts|length }}</h2>
+
+        {% for post in posts %}
+            <h3>{{ post.title }}</h3>
+            <p>
+                Автор: {{ post.author.user.username }} |
+                Дата: {{ post.time_in|date:"d M Y" }} |
+                Рейтинг: {{ post.rating }}
+            </p>
+            <p>{{ post.text }}</p>
+
+            <hr>
+        {% endfor %}
+
+        {% if page_obj.has_previous %}
+            <a href="?{% url_replace page=1 %}">Первая</a>
+            <a href="?{% url_replace page=page_obj.previous_page_number %}">←</a>
+        {% endif %}
+
+        <span>Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</span>
+
+        {% if page_obj.has_next %}
+            <a href="?{% url_replace page=page_obj.next_page_number %}">→</a>
+            <a href="?{% url_replace page=page_obj.paginator.num_pages %}">Последняя</a>
+        {% endif %}
+
+    {% else %}
+        <h2>Посты не найдены.</h2>
+    {% endif %}
+</body>
+</html>

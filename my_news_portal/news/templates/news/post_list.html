@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Список новостей (Главная)</title>
+</head>
+<body>
+
+    <h1>Последние новости</h1>
+
+    <hr>
+
+    {% if posts %}
+        <h2>Всего новостей: {{ posts|length }}</h2>
+
+        {% for post in posts %}
+            <h3>{{ post.title }}</h3>
+            <p>
+                Автор: {{ post.author.user.username }} |
+                Дата: {{ post.time_in|date:"d M Y" }} |
+                Рейтинг: {{ post.rating }}
+            </p>
+            <p>{{ post.text }}</p>
+
+            <hr>
+        {% endfor %}
+
+        {% if page_obj.has_previous %}
+            <a href="?page=1">Первая</a>
+            <a href="?page={{ page_obj.previous_page_number }}">←</a>
+        {% endif %}
+
+        <span>Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">→</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">Последняя</a>
+        {% endif %}
+
+    {% else %}
+        <h2>Новостей нет!</h2>
+    {% endif %}
+</body>
+</html>
