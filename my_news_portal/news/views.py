@@ -1,14 +1,19 @@
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.views.generic import (
     ListView, DetailView, CreateView, UpdateView, DeleteView
 )
 from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Post, ARTICLE, NEWS  # <-- Только Post и константы
 from .forms import PostForm
 from .filters import PostFilter
 
 
 # --- 1. Создание НОВОСТЕЙ (URL: /news/create/) ---
-class PostCreate(CreateView):
+class PostCreate(PermissionRequiredMixin,CreateView):
+    permission_required = ('news.add_post',)
+    model = Post
+    template_name = 'news/post_edit.html'
     form_class = PostForm
     model = Post
     template_name = 'news/post_edit.html'
@@ -21,7 +26,8 @@ class PostCreate(CreateView):
 
 
 # --- 2. Создание СТАТЕЙ (URL: /articles/create/) ---
-class ArticleCreate(CreateView):
+class ArticleCreate(PermissionRequiredMixin,CreateView):
+    permission_required = ('news.add.post',)
     form_class = PostForm
     model = Post
     template_name = 'news/post_edit.html'
@@ -76,11 +82,11 @@ class PostDetail(DetailView):
 
 
 # --- 6. РЕДАКТИРОВАНИЕ И УДАЛЕНИЕ ---
-class PostUpdate(UpdateView):
+class PostUpdate(PermissionRequiredMixin,UpdateView):
+    permission_required = ('news.change_post',)
     form_class = PostForm
     model = Post
     template_name = 'news/post_edit.html'
-
     success_url = reverse_lazy('post_list')
 
 

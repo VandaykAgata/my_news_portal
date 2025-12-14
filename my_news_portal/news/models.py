@@ -59,6 +59,8 @@ class Post(models.Model):
         return f'{self.text[:124]}...'
     def __str__(self):
         return f'{self.title} ({self.author.user.username})'
+    def get_absolute_url(self):
+        return reverse ('post_detail', args=[str(self.id)])
 # --- 4. Модель PostCategory (Промежуточная таблица) ---
 class PostCategory(models.Model):
     # Связь "один ко многим" с Post

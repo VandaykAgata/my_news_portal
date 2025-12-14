@@ -1,0 +1,33 @@
+{% extends "account/base.html" %}
+
+{% load socialaccount %}
+{% load static %}
+
+{% block head_title %}Вход{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Вход</h2>
+
+    <form method="post" action="{% url 'account_login' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        {% if redirect_field_value %}
+        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+        {% endif %}
+
+        <button type="submit">Войти</button>
+    </form>
+    <hr>
+    <h3>Или войдите через:</h3>
+    <a href="{% provider_login_url 'google' %}">
+    Войти через Google
+    </a>
+
+    <p>
+        Еще не зарегистрированы?
+        <a href="{% url 'account_signup' %}">Зарегистрироваться</a>
+    </p>
+</div>
+{% endblock %}
