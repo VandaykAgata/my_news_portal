@@ -1,12 +1,8 @@
 from django.urls import path
 from .views import (
-    PostList,  # <-- Для корневой страницы (список новостей)
-    PostDetail,
-    PostSearch,
-    PostCreate,
-    ArticleCreate,
-    PostUpdate,
-    PostDelete
+    PostList, PostDetail, PostSearch, PostCreate,
+    PostUpdate, PostDelete, ArticleCreate,
+    CategoryListView, subscribe
 )
 
 
@@ -27,4 +23,7 @@ path('<int:pk>/edit/', PostUpdate.as_view(), name='news_update'),
 path('<int:pk>/delete/', PostDelete.as_view(), name='news_delete'),
 path('articles/<int:pk>/edit/', PostUpdate.as_view(), name='article_update'),
 path('articles/<int:pk>/delete/', PostDelete.as_view(), name='article_delete'),
+# 5. Категории
+path('categories/<int:pk>', CategoryListView.as_view(), name='category_list'),
+path('categories/<int:pk>/subscribe', subscribe, name='subscribe'),
 ]

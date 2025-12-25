@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Sum
+from django.urls import reverse
 
 
 # --- Константы для выбора типа поста ---
@@ -30,7 +31,11 @@ class Author(models.Model):
 # --- 2. Модель Category ---
 class Category(models.Model):
     # Название категории. Должно быть уникальным.
-    name = models.CharField(max_length=64, unique=True)
+    name = models.CharField(max_length=100, unique=True)
+    subscribers = models.ManyToManyField(User,related_name= 'categories', blank=True)
+    class Meta:
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категории'
     def __str__(self):
         return self.name
 # --- 3. Модель Post ---

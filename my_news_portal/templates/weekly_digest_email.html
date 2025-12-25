@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h2>Привет, {{ user.username }}!</h2>
+    <p>Вот подборка новых статей из категорий, на которые ты подписан(а), за последние 7 дней:</p>
+    <hr>
+    <ul>
+        {% for post in posts %}
+            <li>
+                <strong><a href="{{ link }}{{ post.get_absolute_url }}">{{ post.title }}</a></strong>
+                <br>
+                <small>Дата: {{ post.dateCreation|date:"d.m.Y" }}</small>
+                <p>{{ post.text|truncatechars:100 }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+    <hr>
+    <p>Удачного чтения!</p>
+</body>
+</html>

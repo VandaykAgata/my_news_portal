@@ -1,0 +1,8 @@
+<html>
+<body>
+    <h2>{{ post.title }}</h2>
+    <p>Здравствуй, {{ user.username }}. Новая статья в твоём любимом разделе {{ category.name }}!</p>
+    <p>{{ post.text|truncatechars:50 }}</p>
+    <a href="http://127.0.0.1:8000{% url 'post_detail' post.id %}">Читать полностью</a>
+</body>
+</html>

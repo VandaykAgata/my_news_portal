@@ -1,18 +1,18 @@
 from allauth.account.forms import SignupForm
 from django.contrib.auth.models import Group
+from django import forms
+from news.models import Author
+
 
 class CommonSignupForm(SignupForm):
-    """
-    Кастомизированная форма регистрации allauth.
-    Автоматически добавляет пользователя в группу 'common'.
-    """
-    def save(self, request):
-        # 1. Вызываем родительский метод для сохранения пользователя
-        user = super(CommonSignupForm, self).save(request)
-        # 2. Получаем группу 'common'
-        common_group = Group.objects.get(name='Common')
-        # 3. Добавляем пользователя в группу
-        common_group.user_set.add(user)
-        # 4. Добавляем пользователя в группу
-        return user
+    is_author = forms.BooleanField(label='Стать автором', required=False)
 
+    def save(self, request):
+        user = super(CommonSignupForm, self).save(request)
+
+        # Если галочка нажата — создаем автора прямо здесь
+        if self.cleaned_data.get('is_author'):
+            Author.objects.get_or_create(user=user)
+            print(f"✅ Автор {user.username} успешно создан через форму!")
+
+        return user

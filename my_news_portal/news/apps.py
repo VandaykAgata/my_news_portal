@@ -6,6 +6,7 @@ class NewsConfig(AppConfig):
     name = 'news'
 
     def ready(self):
+        import news.signals
         try:
             import news.templatetags.censor
         except ImportError:

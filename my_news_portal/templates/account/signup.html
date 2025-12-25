@@ -1,0 +1,22 @@
+{% load socialaccount %} <!DOCTYPE html>
+<html>
+<head>
+    <title>Регистрация</title>
+</head>
+<body>
+    <h1>Регистрация нового пользователя</h1>
+
+    <div class="socialaccount_ballot">
+        <p>Можно войти через соцсети:</p>
+        <ul>
+          {% include "socialaccount/snippets/provider_list.html" with process="signup" %}
+        </ul>
+    </div>
+
+    <hr> <form method="post" action="{% url 'account_signup' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Стать автором</button>
+    </form>
+</body>
+</html>

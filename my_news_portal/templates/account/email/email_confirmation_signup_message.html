@@ -1,0 +1,29 @@
+{% load account %}
+<html>
+<body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #444; line-height: 1.5;">
+    <div style="max-width: 550px; margin: 20px auto; border: 1px solid #e0e0e0; border-radius: 10px; padding: 30px;">
+        <h2 style="color: #2c3e50; font-weight: normal;">Здравствуйте, {{ user.username }}!</h2>
+
+        <p>Спасибо, что решили заглянуть на <b>News Portal</b>. Мы стараемся делать новости чуть более понятными и интересными для каждого.</p>
+
+        <p>Чтобы мы знали, что это действительно вы, и могли присылать вам только самое важное, пожалуйста, подтвердите свой адрес, просто нажав на кнопку ниже:</p>
+
+        <div style="text-align: center; margin: 40px 0;">
+            <a href="{{ activate_url }}"
+               style="background-color: #4CAF50; color: white; padding: 14px 30px; text-decoration: none; border-radius: 25px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+               Да, это моя почта
+            </a>
+        </div>
+
+        <p style="font-size: 13px; color: #888;">
+            Если вы не регистрировались у нас, просто проигнорируйте это письмо. Хорошего дня!<br>
+            <i>Команда News Portal</i>
+        </p>
+
+        <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+        <p style="font-size: 11px; color: #aaa;">
+            Если кнопка не открывается, вы можете вставить эту ссылку в браузер: {{ activate_url }}
+        </p>
+    </div>
+</body>
+</html>

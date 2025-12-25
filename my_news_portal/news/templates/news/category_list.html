@@ -1,0 +1,6 @@
+{% if is_not_subscriber %}
+    <p class="text-center"><a href="{% url 'subscribe' category.id %}" class="btn btn-secondary">Подписаться</a></p>
+{% endif %}
+
+{% for news in category_news_list %}
+    {% endfor %}

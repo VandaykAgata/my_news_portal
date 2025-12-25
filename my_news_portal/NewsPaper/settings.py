@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
 
     # --- ПРИЛОЖЕНИЯ (ниже allauth) ---
+    'django_apscheduler',
     'news',
     'accounts',  # <-- приложение
     'django_filters',
@@ -155,13 +156,20 @@ AUTHENTICATION_BACKENDS = [
 
 ]
 SITE_ID = 1
-ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_LOGIN_METHODS = {'username', 'email'}
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
+
 ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 ACCOUNT_FORMS = {'signup': 'sign.forms.CommonSignupForm'}
-ACCOUNT_EMAIL_CONFIRMATION_REQUIRED = True
 ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+EMAIL_HOST_USER = 'agata.vandaik@yandex.ru'
+EMAIL_HOST_PASSWORD = 'iizlxpgdzqrhrbps'
+DEFAULT_FROM_EMAIL = 'agata.vandaik@yandex.ru'
 
 

@@ -1,0 +1,28 @@
+<html>
+<body style="font-family: 'Segoe UI', Arial, sans-serif; color: #444; line-height: 1.6;">
+    <div style="max-width: 600px; margin: 0 auto; border: 1px solid #f0f0f0; border-radius: 15px; padding: 30px; background-color: #ffffff;">
+        <h2 style="color: #ff6b6b; font-weight: normal;">Привет! 👋</h2>
+
+        <p>Мы знаем, что вы следите за интересными историями, поэтому не могли не поделиться: в категории <b>"{{ post.category.first }}"</b> только что вышла свежая статья!</p>
+
+        <div style="background-color: #fff9f9; border-left: 4px solid #ff6b6b; padding: 15px; margin: 20px 0;">
+            <h3 style="margin-top: 0; color: #333;">{{ post.title }}</h3>
+            <p style="color: #666;">{{ post.text|truncatechars:100 }}</p>
+        </div>
+
+        <p>Если вам интересно узнать подробности, мы подготовили для вас чашечку кофе и полную версию статьи по ссылке ниже: ☕️</p>
+
+        <div style="text-align: center; margin: 30px 0;">
+            <a href="{{ link }}"
+               style="background-color: #ff6b6b; color: white; padding: 12px 30px; text-decoration: none; border-radius: 50px; font-weight: bold; display: inline-block;">
+               Почитать полностью ✨
+            </a>
+        </div>
+
+        <p style="font-size: 13px; color: #999;">
+            Спасибо, что вы с нами! Хорошего вам дня и только добрых новостей.<br>
+            <i>Ваш News Portal ❤️</i>
+        </p>
+    </div>
+</body>
+</html>

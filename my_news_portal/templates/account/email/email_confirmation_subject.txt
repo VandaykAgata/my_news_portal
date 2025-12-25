@@ -1,0 +1,1 @@
+{{ user.username }}, привет! Рады, что вы с нами в News Portal ☕
