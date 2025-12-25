@@ -29,10 +29,14 @@ class PostCreate(PermissionRequiredMixin, CreateView):
     success_url = reverse_lazy('post_list')
 
     def form_valid(self, form):
-        response = super().form_valid(form)
-        form.save_m2m()
-        send_notifications(self.object)
-        return response
+        post = form.save(commit=False)
+        # Если мы хотим что-то добавить посту перед сохранением (например, тип)
+        if self.request.path == '/create/':  # Пример логики для выбора типа
+            post.post_type = 'NW'
+
+            # Просто сохраняем объект, Django сам вызовет сигналы
+        # и сохранит категории после этого.
+        return super().form_valid(form)
 # --- 2. Создание СТАТЕЙ (URL: /articles/create/) ---
 class ArticleCreate(PermissionRequiredMixin, CreateView):
     permission_required = ('news.add_post',) # Исправил опечатку news.add.post на news.add_post

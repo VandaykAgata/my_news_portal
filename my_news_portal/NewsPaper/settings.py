@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from celery.schedules import crontab
 
 from django.conf.global_settings import AUTHENTICATION_BACKENDS
 
@@ -48,7 +49,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
 
     # --- ПРИЛОЖЕНИЯ (ниже allauth) ---
-    'django_apscheduler',
     'news',
     'accounts',  # <-- приложение
     'django_filters',
@@ -172,4 +172,16 @@ EMAIL_HOST_USER = 'agata.vandaik@yandex.ru'
 EMAIL_HOST_PASSWORD = 'iizlxpgdzqrhrbps'
 DEFAULT_FROM_EMAIL = 'agata.vandaik@yandex.ru'
 
+CELERY_BROKER_URL = 'redis://default:KXjYbU9nFEyYbJq6TiM1TCP6PpJTQcSJ@redis-18631.c73.us-east-1-2.ec2.cloud.redislabs.com:18631/0'
+CELERY_RESULT_BACKEND = 'redis://default:KXjYbU9nFEyYbJq6TiM1TCP6PpJTQcSJ@redis-18631.c73.us-east-1-2.ec2.cloud.redislabs.com:18631/0'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
 
+CELERY_BEAT_SCHEDULE = {
+    'weekly_newsletter_8am': {
+        'task': 'news.tasks.weekly_newsletter_task',
+        'schedule': crontab(hour=8, minute=0, day_of_week='monday'),
+    },
+}
+SITE_URL = 'http://127.0.0.1:8000'
