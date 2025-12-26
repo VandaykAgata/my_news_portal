@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Sum
 from django.urls import reverse
+from django.core.cache import cache
 
 
 # --- Константы для выбора типа поста ---
@@ -66,6 +67,10 @@ class Post(models.Model):
         return f'{self.title} ({self.author.user.username})'
     def get_absolute_url(self):
         return reverse ('post_detail', args=[str(self.id)])
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs) # Сначала сохраняем в БД
+        cache.delete(f'post-{self.pk}') # Удаляем конкретный пост из кэша
+        cache.clear()
 # --- 4. Модель PostCategory (Промежуточная таблица) ---
 class PostCategory(models.Model):
     # Связь "один ко многим" с Post

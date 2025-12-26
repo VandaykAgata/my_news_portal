@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{% load cache %}  <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -7,9 +7,12 @@
 <body>
     <header>
         <h1>📰 Новостной Портал</h1>
+
+        {% cache 600 header_nav %}
         <nav>
             <a href="{% url 'post_list' %}">Список новостей</a>
-        </nav>
+            </nav>
+        {% endcache %}
     </header>
 
     <main>
@@ -18,7 +21,9 @@
     </main>
 
     <footer>
+        {% cache 1200 footer_info %}
         <p>&copy; 2025 Все права защищены.</p>
+        {% endcache %}
     </footer>
 </body>
 </html>

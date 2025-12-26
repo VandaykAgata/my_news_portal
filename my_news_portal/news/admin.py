@@ -1,17 +1,14 @@
 from django.contrib import admin
-from .models import Post, Category, Author
+from .models import Post, Category, PostCategory
 
-admin.site.register(Post)
+# Это позволит добавлять категории прямо внутри статьи
+class PostCategoryInline(admin.TabularInline):
+    model = PostCategory
+    extra = 1 # Сколько пустых строк для выбора категорий показать сразу
+
+class PostAdmin(admin.ModelAdmin):
+    inlines = [PostCategoryInline]
+
+# Регистрируем модели
+admin.site.register(Post, PostAdmin)
 admin.site.register(Category)
-
-
-class AuthorAdmin(admin.ModelAdmin):
-    # Используем имена из модели (user и rating)
-    list_display = ('id', 'user', 'rating')
-
-    # Чтобы поиск работал, обращаемся к полю username внутри модели User
-    search_fields = ('user__username',)
-
-
-# Регистрируем модель Author с нашими новыми настройками
-admin.site.register(Author, AuthorAdmin)

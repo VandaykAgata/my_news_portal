@@ -48,8 +48,6 @@ class ArticleCreate(PermissionRequiredMixin, CreateView):
     def form_valid(self, form):
         post = form.save(commit=False)
         post.post_type = ARTICLE
-        post.save() # Сохраняем
-        send_notifications(post) # Вызываем ту же функцию
         return super().form_valid(form)
 
 

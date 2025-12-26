@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 from celery.schedules import crontab
 
-from django.conf.global_settings import AUTHENTICATION_BACKENDS
+from django.conf.global_settings import AUTHENTICATION_BACKENDS, CACHES
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
 
     # --- ПРИЛОЖЕНИЯ (ниже allauth) ---
-    'news',
+    'news.apps.NewsConfig',
     'accounts',  # <-- приложение
     'django_filters',
     'sign',
@@ -122,7 +122,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru-ru'
 
 TIME_ZONE = 'UTC'
 
@@ -185,3 +185,10 @@ CELERY_BEAT_SCHEDULE = {
     },
 }
 SITE_URL = 'http://127.0.0.1:8000'
+
+CACHES = {
+    'default':{
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': 'redis://default:KXjYbU9nFEyYbJq6TiM1TCP6PpJTQcSJ@redis-18631.c73.us-east-1-2.ec2.cloud.redislabs.com:18631/0',
+    }
+}
