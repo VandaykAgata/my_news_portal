@@ -1,6 +1,26 @@
-{% if is_not_subscriber %}
-    <p class="text-center"><a href="{% url 'subscribe' category.id %}" class="btn btn-secondary">Подписаться</a></p>
+{% extends 'default.html' %} {% block content %}
+<h2>Новости в категории: {{ category.name }}</h2>
+
+<hr>
+
+{% if user.is_authenticated %}
+    {% if not is_subscriber %}
+        <p><a href="{% url 'subscribe' category.id %}" class="btn btn-primary">Подписаться на новости категории</a></p>
+    {% else %}
+        <p class="alert alert-info">✅ Вы уже подписаны на эту категорию.</p>
+    {% endif %}
 {% endif %}
 
-{% for news in category_news_list %}
-    {% endfor %}
+<hr>
+
+{% for post in category_news_list %}
+    <div>
+        <h3><a href="{% url 'post_detail' post.id %}">{{ post.title }}</a></h3>
+        <small>{{ post.time_in|date:"d.m.Y" }}</small>
+        <p>{{ post.text|truncatechars:150 }}</p>
+    </div>
+{% empty %}
+    <p>В этой категории пока нет новостей.</p>
+{% endfor %}
+
+{% endblock content %}

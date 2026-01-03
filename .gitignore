@@ -12,3 +12,9 @@ __pycache__/
 
 # Логи
 *.log
+
+db_freeze.json
+*.json
+*.log
+__pycache__/
+.venv/

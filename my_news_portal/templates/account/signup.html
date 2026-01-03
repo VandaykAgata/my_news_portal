@@ -1,4 +1,5 @@
-{% load socialaccount %} <!DOCTYPE html>
+{% load socialaccount %}
+<!DOCTYPE html>
 <html>
 <head>
     <title>Регистрация</title>
@@ -13,10 +14,29 @@
         </ul>
     </div>
 
-    <hr> <form method="post" action="{% url 'account_signup' %}">
+    <hr>
+    <form method="post" action="{% url 'account_signup' %}">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Стать автором</button>
+        <button type="submit" id="submit-btn">Зарегистрироваться</button>
     </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Ищем галочку. В Django формах имя поля обычно 'is_author' (проверь в инспекторе, если не сработает)
+            const authorCheckbox = document.querySelector('input[name="is_author"]');
+            const submitBtn = document.getElementById('submit-btn');
+
+            if (authorCheckbox && submitBtn) {
+                authorCheckbox.addEventListener('change', function () {
+                    if (this.checked) {
+                        submitBtn.textContent = 'Зарегистрироваться и стать автором';
+                    } else {
+                        submitBtn.textContent = 'Зарегистрироваться';
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>

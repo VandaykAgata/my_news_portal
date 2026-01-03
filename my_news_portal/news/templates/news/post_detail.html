@@ -1,3 +1,4 @@
+{% load censor %}
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -5,7 +6,7 @@
 </head>
 <body>
     <div class="container">
-        <h2>{{ post.title }}</h2>
+       <h1>{{ post.title|censor }}</h1>
         <small>Тип: {{ post.post_type }}</small>
 
         <hr>
@@ -15,8 +16,13 @@
             Дата: {{ post.time_in|date:"d M Y" }} |
             Рейтинг: {{ post.rating }}
         </p>
+        <p>Категории:
+            {% for category in post.category.all %}
+         <a href="{% url 'category_list' category.id %}">{{ category.name }}</a>
+            {% endfor %}
+        </p>
 
-        <p>{{ post.text }}</p>
+        <p>{{ post.text|censor }}</p>
 
         <hr>
 

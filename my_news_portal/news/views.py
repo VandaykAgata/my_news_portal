@@ -65,6 +65,7 @@ class PostList(ListView):
         return Post.objects.filter(post_type=NEWS).order_by(self.ordering)
 
 
+
 # --- 4. СТРАНИЦА ПОИСКА (URL: /news/search/) ---
 class PostSearch(ListView):
     model = Post

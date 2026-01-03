@@ -7,23 +7,27 @@ from celery import shared_task
 from .models import Post, Category
 
 
+
 @shared_task
 def weekly_newsletter_task():
     today = timezone.now()
-    last_week = today - datetime.timedelta(days=7)
+    last_week = today - timedelta(days=7)
     posts = Post.objects.filter(time_in__gte=last_week)
 
-    # Если новых постов нет, выходим из функции
     if not posts.exists():
         return
 
-    categories = posts.values_list('category__name', flat=True).distinct()
-    subscribers = set(Category.objects.filter(name__in=categories).values_list('subscribers__email', flat=True))
+    # Собираем уникальные email всех подписчиков, чьи категории обновились
+    subscribers_emails = set(
+        Category.objects.filter(posts__in=posts)
+        .values_list('subscribers__email', flat=True)
+    )
 
-    for email in subscribers:
+    for email in subscribers_emails:
         if not email:
             continue
 
+        # Фильтруем посты специально для этого подписчика
         user_posts = posts.filter(category__subscribers__email=email).distinct()
 
         html_content = render_to_string(
@@ -36,13 +40,11 @@ def weekly_newsletter_task():
 
         msg = EmailMultiAlternatives(
             subject='Статьи за неделю',
-            body='',
             from_email=settings.DEFAULT_FROM_EMAIL,
             to=[email],
         )
         msg.attach_alternative(html_content, "text/html")
         msg.send()
-
 
 
 @shared_task
