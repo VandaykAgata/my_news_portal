@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 from celery.schedules import crontab
-
+import  os
 from django.conf.global_settings import AUTHENTICATION_BACKENDS, CACHES
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -34,6 +34,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'modeltranslation',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # --- БЛОК ALLAUTH  ---
+    # --- БЛОК ALLAUTH ---
     'django.contrib.sites',
     'allauth',
     'allauth.account',
@@ -54,18 +55,21 @@ INSTALLED_APPS = [
     'django_filters',
     'sign',
     'protect',
+    'rest_framework',
 
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
+    'news.middleware.TimezoneMiddleware',
 ]
 
 ROOT_URLCONF = 'NewsPaper.urls'
@@ -126,13 +130,23 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'ru-ru'
+LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'UTC'
 
-USE_I18N = True
+USE_I18N = True  # Включаем поддержку перевода
+USE_L10N = True  # Включаем форматирование чисел и дат под регион
 
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale')
+]
+# Список языков, на которые мы будем переводить
+LANGUAGES = [
+    ('ru', 'Русский'),
+    ('en-us', 'English'), # Добавь -us, как в админке!
+]
 USE_TZ = True
+TIME_ZONE = 'UTC'
 
 
 # Static files (CSS, JavaScript, Images)
@@ -159,6 +173,16 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 
 ]
+
+REST_FRAMEWORK = {
+# По умолчанию читать могут все, а менять — только авторизованные
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ],
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ],
+}
 SITE_ID = 1
 ACCOUNT_LOGIN_METHODS = {'username', 'email'}
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
@@ -296,7 +320,7 @@ LOGGING = {
         'django': {
             # Привязываем все консольные форматы + файл general
             'handlers': ['console_debug_handler', 'console_warning_handler', 'console_error_handler', 'general_file'],
-            'level': 'DEBUG',
+            'level': 'INFO',
             'propagate': True,
         },
         'django.request': {

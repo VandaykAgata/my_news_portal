@@ -1,17 +1,68 @@
-{% load cache %}  <!DOCTYPE html>
+{% load cache %}
+{% load i18n %}
+{% load tz %}
+{% get_current_timezone as user_tz %}
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Мой Новостной Портал</title>
-</head>
-<body>
-    <header>
-        <h1>📰 Новостной Портал</h1>
+    <title>{% trans "Мой Новостной Портал" %}</title>
 
-        {% cache 600 header_nav %}
+    <style>
+        /* Светлая тема */
+        .light-theme {
+            background-color: #ffffff;
+            color: #212529;
+            transition: background-color 0.3s, color 0.3s; /* Плавный переход */
+        }
+
+        /* Темная тема */
+        .dark-theme {
+            background-color: #121212;
+            color: #e0e0e0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Ссылки для темной темы, чтобы они не сливались */
+        .dark-theme a {
+            color: #bb86fc;
+        }
+    </style>
+</head>
+
+
+<body class="{{ request.theme }}">
+    <header>
+        <h1>📰 {% trans "Новостной Портал" %}</h1>
+
+        {# 2. Информация о времени и поясе #}
+        <section style="border-bottom: 1px solid #ccc; padding-bottom: 10px;">
+            <p>🕒 {% trans "Текущее время" %}: {% now "DATETIME_FORMAT" %}</p>
+            <p>🌍 {% trans "Ваш часовой пояс" %}: {{ user_tz }}</p>
+            <a href="{% url 'set_timezone' %}">⚙️ {% trans "Сменить часовой пояс" %}</a>
+        </section>
+
+        <section>
+            <form action="{% url 'set_language' %}" method="post">
+                {% csrf_token %}
+                <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                <select name="language">
+                    {% get_available_languages as LANGUAGES %}
+                    {% get_language_info_list for LANGUAGES as languages %}
+                    {% for language in languages %}
+                        <option value="{{ language.code }}" {% if language.code == LANGUAGE_CODE %}selected{% endif %}>
+                            {{ language.name_local }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <input type="submit" value="{% trans 'Выбрать' %}">
+            </form>
+        </section>
+
+        {% cache 600 header_nav LANGUAGE_CODE %}
         <nav>
-            <a href="{% url 'post_list' %}">Список новостей</a>
-            </nav>
+            <a href="{% url 'post_list' %}">{% trans "Список новостей" %}</a>
+        </nav>
         {% endcache %}
     </header>
 
@@ -21,8 +72,8 @@
     </main>
 
     <footer>
-        {% cache 1200 footer_info %}
-        <p>&copy; 2025 Все права защищены.</p>
+        {% cache 1200 footer_info LANGUAGE_CODE %}
+        <p>&copy; 2026 {% trans "Все права защищены." %}</p>
         {% endcache %}
     </footer>
 </body>

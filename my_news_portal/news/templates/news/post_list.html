@@ -1,38 +1,48 @@
 {% extends 'default.html' %}
-
+{% load i18n %}
 {% block content %}
-    <h1>Последние новости</h1>
+    <h1>{% trans "Последние новости" %}</h1>
     <hr>
 
     {% if posts %}
-        <h2>Всего новостей: {{ posts|length }}</h2>
+        <h2>{% trans "Всего новостей" %}: {{ posts|length }}</h2>
 
         {% for post in posts %}
             <h3><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h3>
             <p>
-                Автор: {{ post.author.user.username }} |
-                Дата: {{ post.time_in|date:"d M Y" }} |
-                Рейтинг: {{ post.rating }}
+                {% trans "Автор" %}: {{ post.author.user.username }} |
+                {% trans "Дата" %}: {{ post.time_in|date:"d M Y" }} |
+                {% trans "Рейтинг" %}: {{ post.rating }}
             </p>
-            <p>{{ post.text|truncatechars:100 }}</p> <hr>
+
+            <p>
+                {% trans "Категории" %}:
+                {% for category in post.category.all %}
+                    <a href="{% url 'category_list' category.id %}">{{ category.name }}</a>
+                {% endfor %}
+            </p>
+            <p>{{ post.text|truncatechars:100 }}</p>
+            <hr>
         {% endfor %}
 
         <div>
 
             {% if page_obj.has_previous %}
-                <a href="?page=1">Первая</a>
+                <a href="?page=1">{% trans "Первая" %}</a>
                 <a href="?page={{ page_obj.previous_page_number }}">←</a>
             {% endif %}
 
-            <span>Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</span>
+            <span>
+                {% trans "Страница" %} {{ page_obj.number }} {% trans "из" %} {{ page_obj.paginator.num_pages }}
+            </span>
 
             {% if page_obj.has_next %}
                 <a href="?page={{ page_obj.next_page_number }}">→</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}">Последняя</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">{% trans "Последняя" %}</a>
             {% endif %}
         </div>
 
     {% else %}
-        <h2>Новостей нет!</h2>
+        <h2>{% trans "Новостей нет!" %}</h2>
     {% endif %}
 {% endblock content %}

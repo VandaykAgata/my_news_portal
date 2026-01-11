@@ -1,0 +1,19 @@
+openapi: 3.0.2
+info:
+  title: 'My News Portal API'
+  version: "1.0"
+paths:
+  /api/news/:
+    get:
+      summary: "Получить список новостей"
+      description: "Возвращает все объекты с типом 'NW'"
+      responses:
+        '200':
+          description: "Успешный ответ"
+  /api/articles/:
+    get:
+      summary: "Получить список статей"
+      description: "Возвращает все объекты с типом 'AR'"
+      responses:
+        '200':
+          description: "Успешный ответ"

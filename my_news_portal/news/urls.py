@@ -1,15 +1,23 @@
-from django.urls import path
+from django.urls import path, include
 from .views import (
     PostList, PostDetail, PostSearch, PostCreate,
     PostUpdate, PostDelete, ArticleCreate,
-    CategoryListView, subscribe
+    CategoryListView, subscribe, set_timezone
 )
-from django.views.decorators.cache import cache_page
+from rest_framework import routers
+from  .views import NewsViewset, ArticlesViewset
+
+# Создаем роутер для приложения news
+router = routers.DefaultRouter()
+router.register(r'news', NewsViewset, basename='news')
+router.register(r'articles', ArticlesViewset, basename='articles')
+
+
 
 urlpatterns = [
     # 1. СПИСКИ И ПОИСК
     # Главная страница - кэш на 1 минуту (60 секунд)
-    path('', cache_page(60)(PostList.as_view()), name='post_list'),
+    path('', PostList.as_view(), name='post_list'),
     path('search/', PostSearch.as_view(), name='post_search'),
 
     # 2. CRUD: СОЗДАНИЕ
@@ -18,7 +26,7 @@ urlpatterns = [
 
     # 3. ДЕТАЛЬНАЯ СТРАНИЦА
     # Отдельная новость/статья - кэш на 5 минут (300 секунд)
-    path('<int:pk>/', cache_page(60*60*24)(PostDetail.as_view()), name='post_detail'),
+    path('<int:pk>/',PostDetail.as_view(), name='post_detail'),
 
     # 4. РЕДАКТИРОВАНИЕ/УДАЛЕНИЕ
     path('<int:pk>/edit/', PostUpdate.as_view(), name='news_update'),
@@ -29,4 +37,9 @@ urlpatterns = [
     # 5. Категории
     path('categories/<int:pk>', CategoryListView.as_view(), name='category_list'),
     path('categories/<int:pk>/subscribe', subscribe, name='subscribe'),
+
+    # 6. Часовые пояса
+    path('set_timezone/', set_timezone, name='set_timezone'),
+
+    path('', include(router.urls)),
 ]

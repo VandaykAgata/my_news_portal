@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Author, Category, Post, PostCategory, Comment
-
+from modeltranslation.admin import TranslationAdmin
 
 # 1. Создаем "вставку" для категорий
 class CategoryInline(admin.TabularInline):
@@ -24,9 +24,22 @@ class PostAdmin(admin.ModelAdmin):
 
     get_categories.short_description = 'Категории'
 
+# Регистрируем через TranslationAdmin, чтобы видеть поля для обоих языков
+class CategoryAdmin(TranslationAdmin):
+    model = Category
+
+class PostAdmin(TranslationAdmin):
+    model = Post
 
 # 3. Регистрация остальных моделей
 admin.site.register(Author)
 admin.site.register(Category)
 admin.site.register(Post, PostAdmin)
 admin.site.register(Comment)
+
+# Перерегистрируем модели
+admin.site.unregister(Post) # Сначала отменяем старую регистрацию, если она была
+admin.site.unregister(Category)
+
+admin.site.register(Category, CategoryAdmin)
+admin.site.register(Post, PostAdmin)

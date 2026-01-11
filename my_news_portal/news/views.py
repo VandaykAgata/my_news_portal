@@ -4,7 +4,6 @@ from django.views.generic import (
 )
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
-from pyexpat.errors import messages
 from unicodedata import category
 
 from .models import Post, ARTICLE, NEWS, Category  # <-- Только Post и константы
@@ -16,8 +15,13 @@ from django.shortcuts import redirect
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.conf import settings
-
-
+import zoneinfo
+from django.shortcuts import redirect, render
+from rest_framework import viewsets
+from .serializers import PostSerializer
+from django.http import HttpResponse
+from django.conf import settings
+import os
 
 
 # --- 1. Создание НОВОСТЕЙ (URL: /news/create/) ---
@@ -160,3 +164,34 @@ def send_notifications(post):
         )
         msg.attach_alternative(html_content, "text/html")
         msg.send()
+
+
+def set_timezone(request):
+    if request.method == 'POST':
+        # Сохраняем выбор пользователя в сессию
+        request.session['django_timezone'] = request.POST.get('timezone')
+        return redirect(request.META.get('HTTP_REFERER', '/'))
+
+    # Список всех доступных часовых поясов для выбора
+    return render(request, 'set_timezone.html', {'timezones': zoneinfo.available_timezones()})
+
+# Вьюсет для Новостей
+class NewsViewset(viewsets.ModelViewSet):
+    # Фильтруем только новости
+    queryset = Post.objects.filter(post_type='NW')
+    serializer_class = PostSerializer
+
+# Вьюсет для Статей
+class ArticlesViewset(viewsets.ModelViewSet):
+    # Фильтруем только статьи
+    queryset = Post.objects.filter(post_type='AR')
+    serializer_class = PostSerializer
+
+
+def openapi_schema_view(request):
+    # Формируем путь именно туда, где файл лежит
+    # (в папке templates приложения news)
+    schema_path = os.path.join(settings.BASE_DIR, 'news', 'templates', 'openapi-schema.yml')
+
+    with open(schema_path, 'r', encoding='utf-8') as f:
+        return HttpResponse(f.read(), content_type='text/yaml')
